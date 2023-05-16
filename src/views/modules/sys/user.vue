@@ -69,21 +69,21 @@
         align="center"
         width="50">
         <template slot-scope="scope">
-          <el-popover placement="right" trigger="click" @hide="scope.row.reset = false, scope.row.delete = false">
+          <el-popover placement="right" trigger="click" @hide="popoverHandle(scope.row.id)">
             <el-button v-if="isAuth('sys:user:update')" type="primary" icon="el-icon-edit" size="small" @click="addOrUpdateHandle(scope.row.id)" title="修改" />
-            <el-button v-if="isAuth('sys:user:reset')" type="warning" icon="el-icon-refresh" size="small" @click="scope.row.reset = true, scope.row.delete = false" title="重置密码" />
-            <el-button v-if="isAuth('sys:user:delete')" type="danger" icon="el-icon-delete" size="small" @click="scope.row.delete = true, scope.row.reset = false" title="删除" />
-            <el-popover trigger="click" v-model="scope.row.reset">
+            <el-button v-if="isAuth('sys:user:reset')" type="warning" icon="el-icon-refresh" size="small" @click="popoverHandle(scope.row.id, 'reset')" title="重置密码" />
+            <el-button v-if="isAuth('sys:user:delete')" type="danger" icon="el-icon-delete" size="small" @click="popoverHandle(scope.row.id, 'delete')" title="删除" />
+            <el-popover trigger="click" :ref="'reset' + scope.row.id">
               <p>确认要对【{{scope.row.name}}】进行密码重置吗？</p>
               <div style="text-align: right; margin: 0">
-                <el-button size="mini" type="text" @click="scope.row.reset = false">取消</el-button>
-                <el-button type="primary" size="mini" @click="resetHandle(scope.row)">确定</el-button>
+                <el-button size="mini" type="text" @click="popoverHandle(scope.row.id)">取消</el-button>
+                <el-button type="primary" size="mini" @click="resetHandle(scope.row.id)">确定</el-button>
               </div>
             </el-popover>
-            <el-popover trigger="click" v-model="scope.row.delete">
+            <el-popover trigger="click" :ref="'delete' + scope.row.id">
               <p>确认要删除【{{scope.row.name}}】吗？</p>
               <div style="text-align: right; margin: 0">
-                <el-button size="mini" type="text" @click="scope.row.delete = false">取消</el-button>
+                <el-button size="mini" type="text" @click="popoverHandle(scope.row.id)">取消</el-button>
                 <el-button type="primary" size="mini" @click="deleteHandle(scope.row.id)">确定</el-button>
               </div>
             </el-popover>
@@ -205,9 +205,9 @@ export default {
       }).catch(() => {})
     },
     // 重置密码
-    resetHandle (o) {
+    resetHandle (id) {
       this.$http({
-        url: this.$http.adornUrl(`/sys/user/reset/${o.id}`),
+        url: this.$http.adornUrl(`/sys/user/reset/${id}`),
         method: 'post',
         data: this.$http.adornData()
       }).then(({data}) => {
@@ -217,7 +217,7 @@ export default {
             type: 'success',
             duration: 1500,
             onClose: () => {
-              o.reset = false
+              this.popoverHandle(id)
             }
           })
         } else {
@@ -244,6 +244,13 @@ export default {
           this.$message.error(data.message)
         }
       })
+    },
+    popoverHandle (id, type) {
+      this.$refs[`reset${id}`].doClose()
+      this.$refs[`delete${id}`].doClose()
+      if (type) {
+        this.$refs[`${type}${id}`].doShow()
+      }
     }
   }
 }
