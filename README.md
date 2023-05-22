@@ -29,7 +29,7 @@
 #### 代码生成
 ![输入图片说明](demo-screenshot/11.png)
 
-#### 数据字典
+#### 数据模型
 ![输入图片说明](demo-screenshot/12.png)
 ![输入图片说明](demo-screenshot/13.png)
 
