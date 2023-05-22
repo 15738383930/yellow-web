@@ -27,7 +27,7 @@
         <el-submenu index="2">
           <template slot="title">Git源码</template>
           <el-menu-item index="2-1"><a href="https://gitee.com/xuan_zheng/yellow-web" target="_blank">前端</a></el-menu-item>
-          <el-menu-item index="2-2"><a href="https://gitee.com/xuan_zheng/yellow" target="_blank">后台</a></el-menu-item>
+          <el-menu-item index="2-2"><a href="https://gitee.com/xuan_zheng/yellow" target="_blank">后端</a></el-menu-item>
           <el-menu-item index="2-3"><a href="https://gitee.com/xuan_zheng/yellow/tree/master/renren-generator" target="_blank">代码生成器</a></el-menu-item>
         </el-submenu>
         <el-menu-item class="site-navbar__avatar" index="3">

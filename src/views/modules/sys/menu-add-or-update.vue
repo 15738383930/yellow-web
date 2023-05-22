@@ -33,7 +33,7 @@
       <el-form-item v-if="dataForm.type === 1" label="菜单路由" prop="url">
         <el-input v-model="dataForm.url" placeholder="菜单路由"></el-input>
       </el-form-item>
-      <el-form-item v-if="dataForm.type !== 0" label="授权标识" prop="authCode">
+      <el-form-item v-if="dataForm.type === 2" label="授权标识" prop="authCode">
         <el-input v-model="dataForm.authCode" placeholder="多个用逗号分隔, 如: user:list,user:create"></el-input>
       </el-form-item>
       <el-form-item v-if="dataForm.type !== 2" label="排序号" prop="sort">
