@@ -5,6 +5,7 @@
 - 动态菜单，通过菜单管理统一管理访问路由
 - 数据切换，通过mock配置对接口数据／mock模拟数据进行切换
 - 发布时，可动态配置CDN静态资源／切换新旧版本
+- 后端地址：https://gitee.com/xuan_zheng/yellow
 
 #### 登录模块
 ![输入图片说明](demo-screenshot/01.png)
