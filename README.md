@@ -1,5 +1,5 @@
 # yellow-web
-- yellow-web基于renren-fast-vue构建开发
+- yellow-web基于[renren-fast-vue](https://gitee.com/renrenio/renren-fast-vue) 构建开发
 - 前后端分离，通过token进行数据交互，可独立部署
 - 主题定制，通过scss变量统一一站式定制
 - 动态菜单，通过菜单管理统一管理访问路由
@@ -43,3 +43,6 @@
 
 #### 操作日志
 ![输入图片说明](demo-screenshot/18.png)
+
+#### 反馈交流
+- QQ群：142713860
