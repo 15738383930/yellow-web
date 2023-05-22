@@ -4,6 +4,7 @@ import router from '@/router'
 import qs from 'qs'
 import merge from 'lodash/merge'
 import { clearLoginInfo } from '@/utils'
+import { Message } from 'element-ui'
 
 const http = axios.create({
   timeout: 1000 * 30,
@@ -27,9 +28,16 @@ http.interceptors.request.use(config => {
  * 响应拦截
  */
 http.interceptors.response.use(response => {
-  if (response.data && response.data.code === 10001) { // 401, token失效
+  if (response.data && response.data.code === 10001) { // 10001，认证失败
     clearLoginInfo()
     router.push({ name: 'login' })
+  }
+  if (response.data && response.data.code === 10002) { // 10002，没有授权
+    Message({
+      message: response.data.message,
+      duration: 1500,
+      type: 'warning'
+    })
   }
   return response
 }, error => {

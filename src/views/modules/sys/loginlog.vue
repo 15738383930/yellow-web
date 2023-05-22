@@ -1,67 +1,70 @@
 <template>
-  <div class="mod-log">
+  <div class="mod-config">
     <el-form :inline="true" :model="dataForm" @keyup.enter.native="getDataList()">
       <el-form-item>
-        <el-input v-model="dataForm.key" placeholder="用户名／用户操作" clearable></el-input>
+        <el-input v-model="dataForm.key" placeholder="用户名" clearable></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button @click="getDataList(true)">查询</el-button>
+        <el-button @click="getDataList()">查询</el-button>
       </el-form-item>
     </el-form>
     <el-table
       :data="dataList"
       border
       v-loading="dataListLoading"
-      style="width: 100%">
+      @selection-change="selectionChangeHandle"
+      style="width: 100%;">
       <el-table-column
-        prop="operateName"
+        type="selection"
         header-align="center"
         align="center"
-        label="用户名">
+        width="50">
       </el-table-column>
       <el-table-column
-        prop="operateEvent"
+        prop="username"
         header-align="center"
         align="center"
-        :show-overflow-tooltip="true"
-        label="用户操作">
+        label="用户账号">
       </el-table-column>
       <el-table-column
-        prop="requestMethod"
+        prop="ip"
         header-align="center"
         align="center"
-        :show-overflow-tooltip="true"
-        label="请求方法">
+        label="登录IP地址">
       </el-table-column>
       <el-table-column
-        prop="methodName"
+        prop="address"
         header-align="center"
         align="center"
-        :show-overflow-tooltip="true"
-        label="操作内容">
+        label="登录地点">
       </el-table-column>
       <el-table-column
-        prop="time"
+        prop="browser"
         header-align="center"
         align="center"
-        label="执行时长(毫秒)">
+        label="浏览器类型">
       </el-table-column>
       <el-table-column
-        prop="operateStatus"
+        prop="os"
         header-align="center"
         align="center"
-        label="操作状态">
+        label="操作系统">
+      </el-table-column>
+      <el-table-column
+        prop="status"
+        header-align="center"
+        align="center"
+        label="登录状态（成功/ 失败）">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.operateStatus === '成功'" size="small" type="success">{{scope.row.operateStatus}}</el-tag>
-          <el-tag v-if="scope.row.operateStatus === '失败'" style="cursor: pointer;" @click="openDetails(scope.row.id)" size="small" type="danger">{{scope.row.operateStatus}}</el-tag>
+          <el-tag v-if="scope.row.status.indexOf('成功') > -1" size="small" type="success">{{scope.row.status}}</el-tag>
+          <el-tag v-if="scope.row.status.indexOf('失败') > -1" style="cursor: pointer;" @click="openDetails(scope.row.id)" size="small" type="danger">{{scope.row.status}}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
-        prop="operateTime"
+        prop="loginTime"
         header-align="center"
         align="center"
-        width="180"
-        label="操作时间">
+        label="访问时间">
       </el-table-column>
     </el-table>
     <el-pagination
@@ -91,26 +94,23 @@
         pageSize: 10,
         totalPage: 0,
         dataListLoading: false,
-        selectionDataList: [],
+        dataListSelections: [],
+        addOrUpdateVisible: false,
         detailsVisible: false
       }
     },
     components: {
       LogDetails
     },
-    created () {
+    activated () {
       this.getDataList()
     },
     methods: {
       // 获取数据列表
-      getDataList (where) {
-        if (where) {
-          this.pageSize = 10
-          this.pageIndex = 1
-        }
+      getDataList () {
         this.dataListLoading = true
         this.$http({
-          url: this.$http.adornUrl(`/sys/log/page/list/${this.pageIndex}/${this.pageSize}`),
+          url: this.$http.adornUrl(`/sys/loginlog/page/list/${this.pageIndex}/${this.pageSize}`),
           method: 'get',
           params: this.$http.adornParams({
             'key': this.dataForm.key
@@ -126,12 +126,6 @@
           this.dataListLoading = false
         })
       },
-      openDetails (id) {
-        this.detailsVisible = true
-        this.$nextTick(() => {
-          this.$refs.logDetails.init(id, 2)
-        })
-      },
       // 每页数
       sizeChangeHandle (val) {
         this.pageSize = val
@@ -142,6 +136,16 @@
       currentChangeHandle (val) {
         this.pageIndex = val
         this.getDataList()
+      },
+      // 多选
+      selectionChangeHandle (val) {
+        this.dataListSelections = val
+      },
+      openDetails (id) {
+        this.detailsVisible = true
+        this.$nextTick(() => {
+          this.$refs.logDetails.init(id, 1)
+        })
       }
     }
   }

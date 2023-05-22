@@ -81,7 +81,7 @@
           if (data && data.success) {
             this.loading = false
             this.userId = data.result.id
-            this.userName = data.result.username
+            this.userName = data.result.name
           }
         })
       }
